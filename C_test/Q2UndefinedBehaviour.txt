@@ -1,0 +1,49 @@
+1.Potential bugs:
+    1-1. no "else" statement:
+        Parameter m could be other number, string or chars. Taking m as 8 for instance, the function will return nothing as 
+        it does not go to any if-else statement. Then when we access putchar(m[0]), it causes "segmentation error"
+
+    1-2. fixed static array vs dynamic array in the function:
+        if we goes to m==1 statement and then access putchar(m[0]), we will get segmentation fault.
+        It is due to the buf[6] array is the local array, and it is destroyed when function is finished.
+        So when we access the array after the function, we could not find anything and get "segmentation error".
+        In contrast, dynamic array exists until program is finished. its life-span is controlled by the programmer,
+        it is better to free it properly to avoid memory leak. Example is showed as below,
+        
+        E.g.
+        $free(m);
+        $m=NULL;
+
+2.Undefined behaviours:
+    2-1. variable x is not initialized with a number.
+        this variable is uninitialized as we have not given 
+        it a value. It could be any number based on current specified memory space.
+        So x could be a random number and it may lead us to different consequences。
+
+    2-2. x--:
+        In C language, x-- or --x does not define doing subtraction or doing operation first.
+        It depends on different compiler, so it may cause different consequences。
+
+    2-3. malloc function is better to be added "sizeof()":
+        char* msg = (char*)malloc(SIZE*sizeof(char));
+
+    2-4. char array initialization:
+        It is better to assign initial value to the array ,if not we may have 
+        random content in all the elements. The initialization example is showed as below, 
+        char buf[6] = "" 
+        char buf[6] = {0, 0, 0, 0, 0, 0};
+
+    2-5. Checking malloc function works or not:
+        The allocation may fail if the memory is not sufficient(very unlucky condition). In this case, 
+        it returns a NULL pointer. So, we should include code to check for a NULL pointer.
+        Instance is showed as below,
+        
+        E.g.
+        $char* msg = (char*)malloc(100);
+        $if (msg!=NULL){
+            strcpy(msg, "ABCDEF");
+            return msg;
+        }
+        $else
+            return NULL;
+
